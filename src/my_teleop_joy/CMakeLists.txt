@@ -10,15 +10,21 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(turtlesim REQUIRED)
 find_package(geometry_msgs REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(sensor_msgs REQUIRED)
+
 
 add_executable(my_teleop_joy_node src/my_teleop_joy_node.cpp)
 target_include_directories(my_teleop_joy_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 target_compile_features(my_teleop_joy_node PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+
+ament_target_dependencies(my_teleop_joy_node
+  rclcpp
+  turtlesim
+  geometry_msgs
+  sensor_msgs
+)
 
 install(TARGETS my_teleop_joy_node
   DESTINATION lib/${PROJECT_NAME})
