@@ -1,0 +1,30 @@
+#include "my_teleop_joy_node.hpp"
+
+MyTeleop::MyTeleop()
+    : Node("teleop")
+{
+  // Setup cmd_vel publisher
+  cmd_vel_pub_ = this->create_publisher<Twist>("/cmd_vel", 10);
+  auto timer_callback =
+      [this]() -> void
+  {
+    this->cmd_vel_pub_->publish(cmd_vel_msg_);
+  };
+  timer_ = this->create_wall_timer(500ms, timer_callback);
+
+  // Setup joy subscriber
+  auto joy_callback =
+      [this](Joy::UniquePtr msg) -> void
+  {
+    joy_msg_ = *msg;
+  };
+  joy_sub_ = this->create_subscription<Joy>("/joy", 10, joy_callback);
+}
+
+int main(int argc, char *argv[])
+{
+  rclcpp::init(argc, argv);
+  rclcpp::spin(std::make_shared<MyTeleop>());
+  rclcpp::shutdown();
+  return 0;
+}
