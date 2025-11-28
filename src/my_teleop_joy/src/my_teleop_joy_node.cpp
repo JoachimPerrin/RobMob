@@ -17,6 +17,8 @@ MyTeleop::MyTeleop()
       [this](Joy::UniquePtr msg) -> void
   {
     joy_msg_ = *msg;
+    cmd_vel_msg_.linear.x = joy_msg_.axes[1];
+    cmd_vel_msg_.angular.z = joy_msg_.axes[3];
   };
   joy_sub_ = this->create_subscription<Joy>("/joy", 10, joy_callback);
 }
